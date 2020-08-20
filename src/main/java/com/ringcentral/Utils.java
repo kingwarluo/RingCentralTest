@@ -1,14 +1,15 @@
 package com.ringcentral;
 
-import com.sun.deploy.util.StringUtils;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import static java.util.Optional.ofNullable;
+import java.util.stream.IntStream;
 
 /**
  * 工具类
@@ -19,7 +20,7 @@ import static java.util.Optional.ofNullable;
 public class Utils {
 
 	/**
-	 * 根据firstName->lastName（nullable）->ext(nullable)升序排序
+	 * 问题1：根据firstName->lastName（nullable）->ext(nullable)升序排序
 	 *
 	 * @author jianhua.luo
 	 * @date 2020/8/19
@@ -44,7 +45,7 @@ public class Utils {
 	}};
 
 	/**
-	 * 根据extType字段，按User > Dept > AO > TMO > Other规则排序
+	 * 问题2：根据extType字段，按User > Dept > AO > TMO > Other规则排序
 	 *
 	 * @author jianhua.luo
 	 * @date 2020/8/19
@@ -81,7 +82,7 @@ public class Utils {
 	}
 
 	/**
-	 * 按季度汇总所有销售项目
+	 * 问题3：按季度汇总所有销售项目
 	 *
 	 * @author jianhua.luo
 	 * @date 2020/8/19
@@ -94,7 +95,7 @@ public class Utils {
 	}
 	
     /**
-     * 求每季度最大销售量
+     * 问题4：求每季度最大销售量
      *
      * @author jianhua.luo
      * @date 2020/8/20
@@ -112,9 +113,10 @@ public class Utils {
 	 * usedKeys is an array to store all used keys like :[2,3,4];
 	 * We want to get all unused keys, in this example it would be: [0,1,5,6,7,8,9,]
 	 */
-	
 	public static int[] getUnUsedKeys(int[] allKeys, int[] usedKeys) {
-		return null;
+		List<Integer> usedKeyList = IntStream.of(usedKeys).boxed().collect(Collectors.toList());
+		Integer[] unUsedKeys = IntStream.of(allKeys).boxed().filter(num -> !usedKeyList.contains(num)).toArray(Integer[]::new);
+		return Arrays.stream(unUsedKeys).mapToInt(Integer::valueOf).toArray();
 	}
 
 	public static boolean isEmpty(Collection collection) {

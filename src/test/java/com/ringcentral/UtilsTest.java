@@ -3,8 +3,9 @@ package com.ringcentral;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * 工具类单元测试
@@ -17,13 +18,13 @@ public class UtilsTest {
     @Test
     public void sortByName() {
         List<Extension> extensionList = new ArrayList<Extension>() {{
-           add(new Extension("luo", "kingwar", "java", "ad"));
-           add(new Extension("chen", "yuandong", "java", "ad"));
-           add(new Extension("chen", "kunlong", "php", "ad"));
-           add(new Extension("huang", "ping", "andriod", "ad"));
-           add(new Extension("wang", "zhaojian", "java", "ad"));
-           add(new Extension("wu", "bin", "java", "ad"));
-           add(new Extension("wu", null, "php", "ad"));
+            add(new Extension("luo", "kingwar", "java", "ad"));
+            add(new Extension("chen", "yuandong", "java", "ad"));
+            add(new Extension("chen", "kunlong", "php", "ad"));
+            add(new Extension("huang", "ping", "andriod", "ad"));
+            add(new Extension("wang", "zhaojian", "java", "ad"));
+            add(new Extension("wu", "bin", "java", "ad"));
+            add(new Extension("wu", null, "php", "ad"));
         }};
         List<Extension> extensions = Utils.sortByName(extensionList);
         extensions.forEach(System.out::println);
@@ -71,7 +72,7 @@ public class UtilsTest {
         int[] allKeys = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         int[] usedKeys = new int[]{2, 3, 4};
         int[] unUsedKeys = Utils.getUnUsedKeys(allKeys, usedKeys);
-        Arrays.asList(unUsedKeys).forEach(System.out::println);
+        IntStream.of(unUsedKeys).boxed().collect(Collectors.toList()).forEach(System.out::println);
     }
 
 }
