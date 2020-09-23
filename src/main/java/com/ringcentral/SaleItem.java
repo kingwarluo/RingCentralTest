@@ -1,12 +1,13 @@
 package com.ringcentral;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class SaleItem {
 	private int month;
 	private Date date;
 	private String transationId;
-	private double saleNumbers;
+	private BigDecimal saleNumbers;
 	
 	
 	public int getMonth() {
@@ -27,14 +28,14 @@ public class SaleItem {
 	public void setTransationId(String transationId) {
 		this.transationId = transationId;
 	}
-	public double getSaleNumbers() {
+	public BigDecimal getSaleNumbers() {
 		return saleNumbers;
 	}
-	public void setSaleNumbers(double saleNumbers) {
+	public void setSaleNumbers(BigDecimal saleNumbers) {
 		this.saleNumbers = saleNumbers;
 	}
 
-	public SaleItem(int month, double saleNumbers) {
+	public SaleItem(int month, BigDecimal saleNumbers) {
 		this.month = month;
 		this.saleNumbers = saleNumbers;
 	}

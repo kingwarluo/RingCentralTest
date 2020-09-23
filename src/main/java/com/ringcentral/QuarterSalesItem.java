@@ -1,8 +1,10 @@
 package com.ringcentral;
 
+import java.math.BigDecimal;
+
 public class QuarterSalesItem {
 	private int quarter;
-	private double value;
+	private BigDecimal value;
 	
 	public int getQuarter() {
 		return quarter;
@@ -10,10 +12,10 @@ public class QuarterSalesItem {
 	public void setQuarter(int quarter) {
 		this.quarter = quarter;
 	}
-	public double getValue() {
+	public BigDecimal getValue() {
 		return value;
 	}
-	public void setValue(double value) {
+	public void setValue(BigDecimal value) {
 		this.value = value;
 	}
 
