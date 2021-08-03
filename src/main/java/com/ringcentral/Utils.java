@@ -1,16 +1,13 @@
 package com.ringcentral;
 
-import com.ringcentral.bigDecimal.CustomCollectors;
-import com.ringcentral.util.MonthUtil;
+import com.ringcentral.order.ExtensionSortComparator;
+import com.ringcentral.quarter.MaxByQuarter;
+import com.ringcentral.quarter.SumByQuarter;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.DoubleSummaryStatistics;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -22,6 +19,8 @@ import java.util.stream.IntStream;
  */
 public class Utils {
 
+    private static ExtensionSortComparator extensionSortComparator = new ExtensionSortComparator();
+
     /**
      * 问题1：根据firstName->lastName（nullable）->ext(nullable)升序排序
      *
@@ -29,23 +28,12 @@ public class Utils {
      * @date 2020/8/19
      */
     public static List<Extension> sortByName(List<Extension> extensions) {
-        if (isEmpty(extensions)) {
-            return Collections.emptyList();
-        }
         return extensions.stream().sorted(
                 Comparator.comparing(Extension::getFirstName)
-                        .thenComparing(Extension::getLastName, Comparator.nullsLast(Comparator.naturalOrder()))
-                        .thenComparing(Extension::getExt, Comparator.nullsLast(Comparator.naturalOrder()))
-        ).collect(Collectors.toList());
+                    .thenComparing(Extension::getLastName, Comparator.nullsLast(extensionSortComparator.new EmptyStringLastComparator()))
+                    .thenComparing(Extension::getExt, Comparator.nullsLast(extensionSortComparator.new EmptyStringLastComparator())))
+            .collect(Collectors.toList());
     }
-
-    private static final Map<String, Integer> CHAR_RULES = new HashMap<String, Integer>() {{
-        put("User", 1);
-        put("Dept", 2);
-        put("AO", 3);
-        put("TMO", 4);
-        put("Other", 5);
-    }};
 
     /**
      * 问题2：根据extType字段，按User > Dept > AO > TMO > Other规则排序
@@ -54,13 +42,7 @@ public class Utils {
      * @date 2020/8/19
      */
     public static List<Extension> sortByExtType(List<Extension> extensions) {
-        if (isEmpty(extensions)) {
-            return Collections.emptyList();
-        }
-        return extensions.stream()
-                .filter(extension -> CHAR_RULES.get(extension.getExtType()) != null)
-                .sorted(Comparator.comparingInt(extension -> CHAR_RULES.get(extension.getExtType())))
-                .collect(Collectors.toList());
+        return ExtensionSortComparator.sortByExtType(extensions);
     }
 
     /**
@@ -70,19 +52,7 @@ public class Utils {
      * @date 2020/8/19
      */
     public static List<QuarterSalesItem> sumByQuarter(List<SaleItem> saleItems) {
-        if (isEmpty(saleItems)) {
-            return Collections.emptyList();
-        }
-        return saleItems.stream()
-                .filter(item -> MonthUtil.isValidMonth(item.getMonth()))
-                .collect(Collectors.groupingBy(item -> MonthUtil.getQuarter(item.getMonth()),
-                        CustomCollectors.summingBigDecimal(SaleItem::getSaleNumbers)))
-                .entrySet().stream().map(entry -> {
-                    QuarterSalesItem quarterSalesItem = new QuarterSalesItem();
-                    quarterSalesItem.setQuarter(entry.getKey());
-                    quarterSalesItem.setValue(entry.getValue());
-                    return quarterSalesItem;
-                }).collect(Collectors.toList());
+        return new SumByQuarter().calculate(saleItems);
     }
 
     /**
@@ -92,19 +62,7 @@ public class Utils {
      * @date 2020/8/20
      */
     public static List<QuarterSalesItem> maxByQuarter(List<SaleItem> saleItems) {
-        if (isEmpty(saleItems)) {
-            return Collections.emptyList();
-        }
-        return saleItems.stream()
-                .filter(item -> MonthUtil.isValidMonth(item.getMonth()))
-                .collect(Collectors.groupingBy(item -> MonthUtil.getQuarter(item.getMonth()),
-                        CustomCollectors.maxBy(saleItem -> saleItem.getSaleNumbers().doubleValue())))
-                .entrySet().stream().map(entry -> {
-                    QuarterSalesItem quarterSalesItem = new QuarterSalesItem();
-                    quarterSalesItem.setQuarter(entry.getKey());
-                    quarterSalesItem.setValue(entry.getValue());
-                    return quarterSalesItem;
-                }).collect(Collectors.toList());
+        return new MaxByQuarter().calculate(saleItems);
     }
 
     //Question5
@@ -115,12 +73,8 @@ public class Utils {
      * We want to get all unused keys, in this example it would be: [0,1,5,6,7,8,9,]
      */
     public static int[] getUnUsedKeys(int[] allKeys, int[] usedKeys) {
-        List<Integer> usedKeyList = IntStream.of(usedKeys).boxed().collect(Collectors.toList());
+        Set<Integer> usedKeyList = IntStream.of(usedKeys).boxed().collect(Collectors.toSet());
         Integer[] unUsedKeys = IntStream.of(allKeys).boxed().filter(num -> !usedKeyList.contains(num)).toArray(Integer[]::new);
         return Arrays.stream(unUsedKeys).mapToInt(Integer::valueOf).toArray();
-    }
-
-    public static boolean isEmpty(Collection collection) {
-        return (collection == null || collection.isEmpty()) ? true : false;
     }
 }

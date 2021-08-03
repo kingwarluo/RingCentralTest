@@ -19,6 +19,10 @@ public class QuarterSalesItem {
 		this.value = value;
 	}
 
+	public QuarterSalesItem(int quarter) {
+		this.quarter = quarter;
+	}
+
 	@Override
 	public String toString() {
 		return "QuarterSalesItem{" +

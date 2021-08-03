@@ -24,8 +24,18 @@ public class UtilsTest {
             add(new Extension("chen", "kunlong", "php", "ad"));
             add(new Extension("huang", "ping", "andriod", "ad"));
             add(new Extension("wang", "zhaojian", "java", "ad"));
-            add(new Extension("wu", "bin", "java", "ad"));
+            add(new Extension("wang", "zhaojian", "add", "ad"));
+            add(new Extension("wang", "zhaojian", "", "ad"));
+            add(new Extension("wang", "zhaojian", null, "ad"));
+//            add(new Extension("wu", "bin", "java", "ad"));
             add(new Extension("wu", null, "php", "ad"));
+            add(new Extension("wu", null, null, "ad"));
+            add(new Extension("wu", null, "", "ad"));
+            add(new Extension("wu", null, "add", "ad"));
+            add(new Extension("liao", null, "", "ad"));
+            add(new Extension("liao", null, null, "ad"));
+            add(new Extension("liao", "asdfa", null, "ad"));
+            add(new Extension("liao", null, "sdfafa", "ad"));
         }};
         List<Extension> extensions = Utils.sortByName(extensionList);
         extensions.forEach(System.out::println);
@@ -49,22 +59,23 @@ public class UtilsTest {
     @Test
     public void byQuarterGroupingOperate() {
         List<SaleItem> saleItems = new ArrayList<SaleItem>() {{
-            add(new SaleItem(0, new BigDecimal(123.23)));
-            add(new SaleItem(1, new BigDecimal(123.23)));
-            add(new SaleItem(2, new BigDecimal(455.34)));
-            add(new SaleItem(3, new BigDecimal(324.34)));
-            add(new SaleItem(4, new BigDecimal(995.34)));
-            add(new SaleItem(5, new BigDecimal(457.30)));
-            add(new SaleItem(6, new BigDecimal(255.22)));
-            add(new SaleItem(7, new BigDecimal(825.33)));
-            add(new SaleItem(8, new BigDecimal(155.34)));
-            add(new SaleItem(9, new BigDecimal(555.34)));
-            add(new SaleItem(10, new BigDecimal(439.44)));
-            add(new SaleItem(11, new BigDecimal(533.34)));
-            add(new SaleItem(12, new BigDecimal(424.12)));
+            add(new SaleItem(0, new BigDecimal("123.23")));
+            add(new SaleItem(1, new BigDecimal("123.23")));
+            add(new SaleItem(2, new BigDecimal("455.34")));
+            add(new SaleItem(3, new BigDecimal("324.34")));
+            add(new SaleItem(4, new BigDecimal("995.34")));
+            add(new SaleItem(5, new BigDecimal("457.30")));
+            add(new SaleItem(6, new BigDecimal("255.22")));
+            add(new SaleItem(7, new BigDecimal("825.33")));
+            add(new SaleItem(8, new BigDecimal("155.34")));
+            add(new SaleItem(9, new BigDecimal("555.34")));
+            add(new SaleItem(10, new BigDecimal("439.44")));
+            add(new SaleItem(11, new BigDecimal("533.34")));
+            add(new SaleItem(12, new BigDecimal("424.12")));
         }};
         List<QuarterSalesItem> sumQuarterSalesItems = Utils.sumByQuarter(saleItems);
         sumQuarterSalesItems.forEach(System.out::println);
+        System.out.println("=========================================");
         List<QuarterSalesItem> maxQuarterSalesItems = Utils.maxByQuarter(saleItems);
         maxQuarterSalesItems.forEach(System.out::println);
     }
