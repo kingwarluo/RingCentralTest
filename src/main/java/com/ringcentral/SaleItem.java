@@ -13,8 +13,9 @@ public class SaleItem {
 	public int getMonth() {
 		return month;
 	}
-	public void setMonth(int month) {
+	public SaleItem setMonth(int month) {
 		this.month = month;
+		return this;
 	}
 	public Date getDate() {
 		return date;

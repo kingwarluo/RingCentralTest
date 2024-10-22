@@ -1,13 +1,10 @@
 package com.ringcentral;
 
 import com.ringcentral.order.ExtensionSortComparator;
-import com.ringcentral.quarter.MaxByQuarter;
-import com.ringcentral.quarter.SumByQuarter;
+import com.ringcentral.quarter.CollectorsUtil;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -52,7 +49,24 @@ public class Utils {
      * @date 2020/8/19
      */
     public static List<QuarterSalesItem> sumByQuarter(List<SaleItem> saleItems) {
-        return new SumByQuarter().calculate(saleItems);
+        Map<Integer, BigDecimal> collect = saleItems.stream().collect(Collectors.groupingBy(item -> item.getMonth() / 3, CollectorsUtil.summingBigDecimal(SaleItem::getSaleNumbers)));
+        return collect.entrySet().stream().map(s -> {
+            QuarterSalesItem q = new QuarterSalesItem(s.getKey());
+            q.setValue(s.getValue());
+            return q;
+        }).collect(Collectors.toList());
+    }
+
+    public static List<QuarterSalesItem> getQuarterItem(List<SaleItem> saleItems, int op) {
+        // 1. 将数据按季度分组
+        // 2. 将季度数据递归操作
+        // 3. 整出一个集合
+        Map<Integer, BigDecimal> collect = saleItems.stream().collect(Collectors.groupingBy(item -> item.getMonth() / 3, CollectorsUtil.summingBigDecimal(SaleItem::getSaleNumbers)));
+        return collect.entrySet().stream().map(s -> {
+            QuarterSalesItem q = new QuarterSalesItem(s.getKey());
+            q.setValue(s.getValue());
+            return q;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -62,7 +76,12 @@ public class Utils {
      * @date 2020/8/20
      */
     public static List<QuarterSalesItem> maxByQuarter(List<SaleItem> saleItems) {
-        return new MaxByQuarter().calculate(saleItems);
+        Map<Integer, BigDecimal> collect = saleItems.stream().collect(Collectors.groupingBy(item -> item.getMonth() / 3, CollectorsUtil.maxBigDecimal(SaleItem::getSaleNumbers)));
+        return collect.entrySet().stream().map(s -> {
+            QuarterSalesItem q = new QuarterSalesItem(s.getKey());
+            q.setValue(s.getValue());
+            return q;
+        }).collect(Collectors.toList());
     }
 
     //Question5
