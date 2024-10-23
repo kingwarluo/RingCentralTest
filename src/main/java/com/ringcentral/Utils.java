@@ -5,6 +5,8 @@ import com.ringcentral.quarter.CollectorsUtil;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -50,23 +52,7 @@ public class Utils {
      */
     public static List<QuarterSalesItem> sumByQuarter(List<SaleItem> saleItems) {
         Map<Integer, BigDecimal> collect = saleItems.stream().collect(Collectors.groupingBy(item -> item.getMonth() / 3, CollectorsUtil.summingBigDecimal(SaleItem::getSaleNumbers)));
-        return collect.entrySet().stream().map(s -> {
-            QuarterSalesItem q = new QuarterSalesItem(s.getKey());
-            q.setValue(s.getValue());
-            return q;
-        }).collect(Collectors.toList());
-    }
-
-    public static List<QuarterSalesItem> getQuarterItem(List<SaleItem> saleItems, int op) {
-        // 1. 将数据按季度分组
-        // 2. 将季度数据递归操作
-        // 3. 整出一个集合
-        Map<Integer, BigDecimal> collect = saleItems.stream().collect(Collectors.groupingBy(item -> item.getMonth() / 3, CollectorsUtil.summingBigDecimal(SaleItem::getSaleNumbers)));
-        return collect.entrySet().stream().map(s -> {
-            QuarterSalesItem q = new QuarterSalesItem(s.getKey());
-            q.setValue(s.getValue());
-            return q;
-        }).collect(Collectors.toList());
+        return collect.entrySet().stream().map(s -> new QuarterSalesItem(s.getKey(), s.getValue())).collect(Collectors.toList());
     }
 
     /**
@@ -77,11 +63,7 @@ public class Utils {
      */
     public static List<QuarterSalesItem> maxByQuarter(List<SaleItem> saleItems) {
         Map<Integer, BigDecimal> collect = saleItems.stream().collect(Collectors.groupingBy(item -> item.getMonth() / 3, CollectorsUtil.maxBigDecimal(SaleItem::getSaleNumbers)));
-        return collect.entrySet().stream().map(s -> {
-            QuarterSalesItem q = new QuarterSalesItem(s.getKey());
-            q.setValue(s.getValue());
-            return q;
-        }).collect(Collectors.toList());
+        return collect.entrySet().stream().map(s -> new QuarterSalesItem(s.getKey(), s.getValue())).collect(Collectors.toList());
     }
 
     //Question5

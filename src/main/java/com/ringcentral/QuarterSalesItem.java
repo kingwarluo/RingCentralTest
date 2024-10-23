@@ -19,8 +19,9 @@ public class QuarterSalesItem {
 		this.value = value;
 	}
 
-	public QuarterSalesItem(int quarter) {
+	public QuarterSalesItem(int quarter, BigDecimal value) {
 		this.quarter = quarter;
+		this.value = value;
 	}
 
 	@Override
